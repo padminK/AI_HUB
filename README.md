@@ -36,8 +36,9 @@ A modern, responsive web dashboard for discovering, searching, and launching the
 
 ## Screenshots
 
-![Dashboard Screenshot](![Screenshot_12-6-2025_14472_](https://github.com/user-attachments/assets/d5bc9d5a-f4b9-4266-ac19-42ba4b7238fd)
-)
+## Screenshots
+
+![Dashboard Screenshot](img.JPEG)
 
 ## License
 
