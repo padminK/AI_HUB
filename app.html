@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hub - Enhanced</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            margin-left: 340px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #fff;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.85;
+        }
+
+        .search-container {
+            background: rgba(30, 32, 34, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #333;
+            border-radius: 50px;
+            font-size: 16px;
+            outline: none;
+            background: #232526;
+            color: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.15);
+        }
+
+        .search-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: #232526;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: #764ba2;
+            color: white;
+        }
+
+        .ai-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .ai-card {
+            background: rgba(30, 32, 34, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            color: #e0e0e0;
+        }
+
+        .ai-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.35);
+            border-color: #764ba2;
+        }
+
+        .ai-card.featured {
+            background: linear-gradient(135deg, #232526 60%, #764ba2 100%);
+            color: #fff;
+        }
+
+        .ai-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ai-card .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .ai-card p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            opacity: 0.85;
+        }
+
+        .ai-card .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .feature-tag {
+            background: rgba(118, 75, 162, 0.15);
+            color: #b39ddb;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .ai-card.featured .feature-tag {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .launch-btn {
+            width: 100%;
+            padding: 12px;
+            background: #764ba2;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ai-card.featured .launch-btn {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(10px);
+            color: #fff;
+        }
+
+        .launch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.25);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(30, 32, 34, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 40px;
+            color: #fff;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 320px;
+            height: 100vh;
+            background: rgba(30,32,34,0.98);
+            box-shadow: 2px 0 20px rgba(102,126,234,0.08);
+            padding: 30px 20px 20px 20px;
+            overflow-y: auto;
+            z-index: 10;
+            color: #e0e0e0;
+        }
+
+        @media (max-width: 1100px) {
+            .sidebar { display: none; }
+            .container { margin-left: 0 !important; }
+        }
+        .container { margin-left: 340px; }
+
+        .sidebar h2 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #b39ddb;
+        }
+        .sidebar ul, .sidebar ol {
+            margin-bottom: 25px;
+            padding-left: 18px;
+        }
+        .sidebar li {
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .sidebar a {
+            color: #b39ddb;
+            text-decoration: underline;
+        }
+        .sidebar .video-thumb {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #232526;
+        }
+        .sidebar .idea {
+            background: #232526;
+            border-left: 4px solid #764ba2;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 0.98rem;
+            color: #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .ai-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>📰 Latest AI News</h2>
+        <ul>
+            <li><a href="https://www.theverge.com/ai-artificial-intelligence" target="_blank">The Verge: AI News</a></li>
+            <li><a href="https://www.technologyreview.com/ai/" target="_blank">MIT Tech Review: AI</a></li>
+            <li><a href="https://www.bbc.com/news/technology" target="_blank">BBC Tech</a></li>
+            <li><a href="https://www.analyticsvidhya.com/blog/category/artificial-intelligence/" target="_blank">Analytics Vidhya</a></li>
+        </ul>
+        <strong style="color:#b39ddb;">Latest AI Articles:</strong>
+        <ul>
+            <li><a href="https://www.nature.com/articles/d41586-024-01612-3" target="_blank">Nature: How AI is transforming science</a></li>
+            <li><a href="https://www.wired.com/story/ai-ethics-existential-risk/" target="_blank">WIRED: The Real Risks of AI</a></li>
+            <li><a href="https://www.zdnet.com/article/ai-explained-everything-you-need-to-know/" target="_blank">ZDNet: AI Explained</a></li>
+            <li><a href="https://www.nytimes.com/2024/06/01/technology/ai-google-gemini.html" target="_blank">NYT: Google Gemini and the AI Race</a></li>
+        </ul>
+
+        <h2>🎥 Trending AI Videos</h2>
+        <a href="https://www.youtube.com/watch?v=2ePf9rue1Ao" target="_blank">
+            <img src="https://img.youtube.com/vi/2ePf9rue1Ao/0.jpg" class="video-thumb" alt="AI Video">
+        </a>
+        <a href="https://www.youtube.com/watch?v=WXuK6gekU1Y" target="_blank">
+            <img src="https://img.youtube.com/vi/WXuK6gekU1Y/0.jpg" class="video-thumb" alt="AI Video">
+        </a>
+
+        <h2>💡 Creative AI Ideas</h2>
+        <div class="idea">Build an AI-powered personal finance tracker that gives spending advice.</div>
+        <div class="idea">Create an AI art generator that turns your mood into a painting.</div>
+        <div class="idea">Develop a chatbot that helps students with homework in real time.</div>
+        <div class="idea">Make a voice assistant that reads news summaries from your favorite sources.</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI Hub</h1>
+            <p>Discover and explore the world's most powerful AI tools</p>
+        </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="🔍 Try: 'Gemini', 'Claude', 'ChatGPT', 'coding', 'images', 'efficient'..." id="searchInput">
+                <button class="search-btn" onclick="performSearch()">🔍 Search</button>
+            </div>
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterAI('all')">All</button>
+                <button class="filter-btn" onclick="filterAI('text')">Text & Writing</button>
+                <button class="filter-btn" onclick="filterAI('image')">Image & Art</button>
+                <button class="filter-btn" onclick="filterAI('code')">Code & Development</button>
+                <button class="filter-btn" onclick="filterAI('voice')">Voice & Audio</button>
+                <button class="filter-btn" onclick="filterAI('business')">Business</button>
+            </div>
+        </div>
+
+        <div class="ai-grid" id="aiGrid">
+            <!-- Claude - Most Efficient Overall -->
+            <div class="ai-card featured" data-category="text">
+                <h3>
+                    <div class="icon" style="background: #ff6b35;">🧠</div>
+                    Claude 3.5 Sonnet
+                </h3>
+                <p>The most balanced and efficient AI - excellent reasoning, fast responses, and safe interactions. Perfect for most tasks.</p>
+                <div class="features">
+                    <span class="feature-tag">Most Efficient</span>
+                    <span class="feature-tag">Fast</span>
+                    <span class="feature-tag">Reliable</span>
+                    <span class="feature-tag">Safe</span>
+                </div>
+                <button class="launch-btn" onclick="launchAI('https://claude.ai')">🚀 Launch Claude</button>
+            </div>
+
+            <!-- ChatGPT - Most Popular -->
+            <div class="ai-card featured" data-category="text">
+                <h3>
+                    <div class="icon" style="background: #10a37f;">🤖</div>
+                    ChatGPT-4o
+                </h3>
+                <p>Most versatile AI with multimodal capabilities. Great for complex reasoning, coding, and creative tasks.</p>
+                <div class="features">
+                    <span class="feature-tag">Multimodal</span>
+                    <span class="feature-tag">Creative</span>
+                    <span class="feature-tag">Coding</span>
+                    <span class="feature-tag">Popular</span>
+                </div>
+                <button class="launch-btn" onclick="launchAI('https://chat.openai.com')">🚀 Launch ChatGPT</button>
+            </div>
+
+            <!-- Perplexity - Best for Research -->
+            <div class="ai-card featured" data-category="text">
+                <h3>
+                    <div class="icon" style="background: #20b2aa;">🔍</div>
+                    Perplexity Pro
+                </h3>
+                <p>Most efficient AI for research and real-time information. Gets current data with citations.</p>
+                <div class="features">
+                    <span class="feature-tag">Real-time</span>
+                    <span class="feature-tag">Citations</span>
+                    <span class="feature-tag">Research</span>
+                    <span class="feature-tag">Fast</span>
+                </div>
+                <button class="launch-btn" onclick="launchAI('https://perplexity.ai')">🚀 Launch Perplexity</button>
+            </div>
+
+            <!-- Cursor - Best for Coding -->
+            <div class="ai-card" data-category="code">
+                <h3>
+                    <div class="icon" style="background: #000;">💻</div>
+                    Cursor AI
+                </h3>
+                <p>Most efficient coding assistant. AI-first code editor that understands your entire codebase.</p>
+                <div class="features">
+                    <span class="feature-tag">Coding</span>
+                    <span class="feature-tag">IDE</span>
+                    <span class="feature-tag">Efficient</span>
+                    <span class="feature-tag">Smart</span>
+                </div>
+                <button class="launch-btn" onclick="launchAI('https://cursor.sh')">🚀 Launch Cursor</button>
+            </div>
+
+            <!-- Flux - Best Image Generation -->
+            <div class="ai-card" data-category="image">
+                <h3>
+                    <div class="icon" style="background: #6366f1;">🎨</div>
+                    Flux.1 Pro
+                </h3>
+                <p>Most efficient image generator. Creates photorealistic images faster than Midjourney with better prompt following.</p>
+                <div class="features">
+                    <span class="feature-tag">Photorealistic</span>
+                    <span class="feature-tag">Fast</span>
+                    <span class="feature-tag">Accurate</span>
+                    <span class="feature-tag">Quality</span>
+                </div>
+                <button class="launch-btn" onclick="launchAI('https://fal.ai/models/fal-ai/flux-pro')">🚀 Launch Flux</button>
+            </div>
+
+            <!-- Gemini - Google's Best -->
+            <div class="ai-card" data-category="text">
+                <h3>
+                    <div class="icon" style="background: #4285f4;">✨</div>
+                    Gemini 2.0 Flash
+                </h3>
+                <p>Google's most efficient AI with multimodal capabilities. Excellent for analysis and integration with Google services.</p>
+                <div class="features">
+                    <span class="feature-tag">Google Integration</span>
+                    <span class="feature-tag">Multimodal</span>
+                    <span class="feature-tag">Analysis</span>
+                    <span class="feature-tag">Fast</span>
+                </div>
+                <button class="launch-btn" onclick="launchAI('https://gemini.google.com')">🚀 Launch Gemini</button>
+            </div>
+
+            <!-- V0 by Vercel - UI Generation -->
+            <div class="ai-card" data-category="code">
+                <h3>
+                    <div class="icon" style="background: #000;">🖼️</div>
+                    v0 by Vercel
+                </h3>
+                <p>Most efficient AI for UI/UX design. Generates beautiful, functional React components from text descriptions.</p>
+                <div class="features">
+                    <span class="feature-tag">UI Design</span>
+                    <span class="feature-tag">React</span>
+                    <span class="feature-tag">Components</span>
+                    <span class="feature-tag">Instant</span>
+                </div>
+                <button class="launch-btn" onclick="launchAI('https://v0.dev')">🚀 Launch v0</button>
+            </div>
+
+            <!-- Anthropic's Computer Use -->
+            <div class="ai-card" data-category="business">
+                <h3>
+                    <div class="icon" style="background: #ff6b35;">🖥️</div>
+                    Claude Computer Use
+                </h3>
+                <p>Revolutionary AI that can control your computer. Most efficient for automating desktop tasks and workflows.</p>
+                <div class="features">
+                    <span class="feature-tag">Automation</span>
+                    <span class="feature-tag">Desktop Control</span>
+                    <span class="feature-tag">Revolutionary</span>
+                    <span class="feature-tag">Workflow</span>
+                </div>
+                <button class="launch-btn" onclick="launchAI('https://www.anthropic.com/news/developing-computer-use')">🚀 Learn More</button>
+            </div>
+
+            <!-- ElevenLabs - Voice AI -->
+            <div class="ai-card" data-category="voice">
+                <h3>
+                    <div class="icon" style="background: #ff6b6b;">🎤</div>
+                    ElevenLabs Voice AI
+                </h3>
+                <p>Most realistic voice synthesis AI. Clone voices, generate speech in 29 languages with emotional control.</p>
+                <div class="features">
+                    <span class="feature-tag">Voice Cloning</span>
+                    <span class="feature-tag">29 Languages</span>
+                    <span class="feature-tag">Emotional</span>
+                    <span class="feature-tag">Realistic</span>
+                </div>
+                <button class="launch-btn" onclick="launchAI('https://elevenlabs.io')">🚀 Launch ElevenLabs</button>
+            </div>
+
+            <!-- RunwayML Gen-3 -->
+            <div class="ai-card" data-category="image">
+                <h3>
+                    <div class="icon" style="background: #00d4aa;">🎬</div>
+                    Runway Gen-3 Alpha
+                </h3>
+                <p>Most advanced video generation AI. Create high-quality videos from text or images with precise control.</p>
+                <div class="features">
+                    <span class="feature-tag">Video Generation</span>
+                    <span class="feature-tag">High Quality</span>
+                    <span class="feature-tag">Text-to-Video</span>
+                    <span class="feature-tag">Creative</span>
+                </div>
+                <button class="launch-btn" onclick="launchAI('https://runwayml.com')">🚀 Launch Runway</button>
+            </div>
+
+            <!-- NotebookLM -->
+            <div class="ai-card" data-category="business">
+                <h3>
+                    <div class="icon" style="background: #4285f4;">📚</div>
+                    NotebookLM
+                </h3>
+                <p>Google's most efficient research assistant. Upload documents and get AI-powered insights and summaries.</p>
+                <div class="features">
+                    <span class="feature-tag">Research</span>
+                    <span class="feature-tag">Document Analysis</span>
+                    <span class="feature-tag">Summaries</span>
+                    <span class="feature-tag">Insights</span>
+                </div>
+                <button class="launch-btn" onclick="launchAI('https://notebooklm.google.com')">🚀 Launch NotebookLM</button>
+            </div>
+
+            <!-- Bolt.new -->
+            <div class="ai-card" data-category="code">
+                <h3>
+                    <div class="icon" style="background: #f59e0b;">⚡</div>
+                    Bolt.new
+                </h3>
+                <p>Most efficient full-stack development AI. Build entire web applications instantly with AI assistance.</p>
+                <div class="features">
+                    <span class="feature-tag">Full-Stack</span>
+                    <span class="feature-tag">Instant Apps</span>
+                    <span class="feature-tag">Development</span>
+                    <span class="feature-tag">Efficient</span>
+                </div>
+                <button class="launch-btn" onclick="launchAI('https://bolt.new')">🚀 Launch Bolt</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Most Efficient AI Tools</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">2024-25</div>
+                <div class="stat-label">Latest Models</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">⚡</div>
+                <div class="stat-label">Speed Optimized</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">🏆</div>
+                <div class="stat-label">Top Rated</div>
+            </div>
+        </div>
+
+        <div class="ai-grid" id="ottGrid">
+            <div class="ai-card featured" data-category="ott">
+                <h3>
+                    <div class="icon" style="background: #ff9800;">🎬</div>
+                    Free OTT: Pluto TV
+                </h3>
+                <p>Watch 100s of live TV channels and movies for free. No signup required.</p>
+                <button class="launch-btn" onclick="window.open('https://pluto.tv', '_blank')">🚀 Watch Pluto TV</button>
+            </div>
+            <div class="ai-card featured" data-category="ott">
+                <h3>
+                    <div class="icon" style="background: #2196f3;">📺</div>
+                    Free OTT: Tubi
+                </h3>
+                <p>Stream thousands of movies and TV shows for free, legally.</p>
+                <button class="launch-btn" onclick="window.open('https://tubitv.com', '_blank')">🚀 Watch Tubi</button>
+            </div>
+            <div class="ai-card featured" data-category="ott">
+                <h3>
+                    <div class="icon" style="background: #e50914;">🎥</div>
+                    Free OTT: Plex
+                </h3>
+                <p>Free movies, TV, and 24/7 live channels. No subscription needed.</p>
+                <button class="launch-btn" onclick="window.open('https://www.plex.tv/watch-free', '_blank')">🚀 Watch Plex</button>
+            </div>
+        </div>
+
+        <!-- Free Music Section -->
+        <div class="ai-grid" id="musicGrid">
+            <div class="ai-card featured" data-category="music">
+                <h3>
+                    <div class="icon" style="background: #1db954;">🎵</div>
+                    Free Music: Spotify Free
+                </h3>
+                <p>Listen to millions of songs for free with ads. Discover new music and playlists.</p>
+                <button class="launch-btn" onclick="window.open('https://open.spotify.com/', '_blank')">🚀 Listen on Spotify</button>
+            </div>
+            <div class="ai-card featured" data-category="music">
+                <h3>
+                    <div class="icon" style="background: #ff0000;">🎶</div>
+                    Free Music: YouTube Music
+                </h3>
+                <p>Stream music videos and tracks for free. Explore trending and classic hits.</p>
+                <button class="launch-btn" onclick="window.open('https://music.youtube.com/', '_blank')">🚀 Listen on YouTube Music</button>
+            </div>
+            <div class="ai-card featured" data-category="music">
+                <h3>
+                    <div class="icon" style="background: #f50057;">🎧</div>
+                    Free Music: SoundCloud
+                </h3>
+                <p>Discover and stream a huge library of free tracks from independent artists worldwide.</p>
+                <button class="launch-btn" onclick="window.open('https://soundcloud.com/', '_blank')">🚀 Listen on SoundCloud</button>
+            </div>
+        </div>
+
+        <!-- Free Podcasts Section -->
+        <div class="ai-grid" id="podcastGrid">
+            <div class="ai-card featured" data-category="podcast">
+                <h3>
+                    <div class="icon" style="background: #ff9800;">🎙️</div>
+                    Free Podcasts: Google Podcasts
+                </h3>
+                <p>Listen to thousands of free podcasts on every topic, anytime.</p>
+                <button class="launch-btn" onclick="window.open('https://podcasts.google.com/', '_blank')">🚀 Listen on Google Podcasts</button>
+            </div>
+            <div class="ai-card featured" data-category="podcast">
+                <h3>
+                    <div class="icon" style="background: #1db954;">🎤</div>
+                    Free Podcasts: Spotify Podcasts
+                </h3>
+                <p>Explore and listen to top podcasts for free on Spotify.</p>
+                <button class="launch-btn" onclick="window.open('https://open.spotify.com/genre/podcasts-web', '_blank')">🚀 Listen on Spotify Podcasts</button>
+            </div>
+            <div class="ai-card featured" data-category="podcast">
+                <h3>
+                    <div class="icon" style="background: #4285f4;">📻</div>
+                    Free Podcasts: Pocket Casts
+                </h3>
+                <p>Discover, subscribe, and listen to free podcasts from around the world.</p>
+                <button class="launch-btn" onclick="window.open('https://pocketcasts.com/', '_blank')">🚀 Listen on Pocket Casts</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Array of background image URLs
+        const bgImages = [
+            "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80",
+            "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1500&q=80",
+            "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=1500&q=80",
+            "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1500&q=80"
+        ];
+        let currentBg = 0;
+
+        function setBackground() {
+            document.body.style.backgroundImage = `linear-gradient(135deg, #232526 0%, #414345 100%), url('${bgImages[currentBg]}')`;
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundRepeat = "no-repeat";
+            document.body.style.backgroundAttachment = "fixed";
+            document.body.style.backgroundBlendMode = "overlay";
+        }
+
+        setBackground(); // Set initial background
+
+        setInterval(() => {
+            currentBg = (currentBg + 1) % bgImages.length;
+            setBackground();
+        }, 300000); // 5 minutes in milliseconds
+    </script>
+
+    <script>
+        // Search functionality - Enhanced
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.ai-card');
+            let hasResults = false;
+            
+            if (searchTerm === '') {
+                // Show all cards when search is empty
+                cards.forEach(card => {
+                    card.style.display = 'block';
+                    card.style.opacity = '1';
+                    card.classList.remove('hidden');
+                });
+                hideNoResults();
+                return;
+            }
+            
+            cards.forEach(card => {
+                // Get all searchable text content
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                const features = Array.from(card.querySelectorAll('.feature-tag'))
+                    .map(tag => tag.textContent.toLowerCase()).join(' ');
+                const category = card.dataset.category || '';
+                
+                // Enhanced matching - check for partial matches and common variations
+                const searchableContent = `${title} ${description} ${features} ${category}`;
+                
+                // Direct match
+                let isMatch = searchableContent.includes(searchTerm);
+                
+                // Handle specific AI name variations
+                if (!isMatch) {
+                    // Gemini variations
+                    if (searchTerm.includes('gemini') && title.includes('gemini')) {
+                        isMatch = true;
+                    }
+                    // Claude variations
+                    if (searchTerm.includes('claude') && title.includes('claude')) {
+                        isMatch = true;
+                    }
+                    // ChatGPT variations
+                    if ((searchTerm.includes('chatgpt') || searchTerm.includes('chat gpt') || searchTerm.includes('gpt')) && 
+                        title.includes('chatgpt')) {
+                        isMatch = true;
+                    }
+                    // OpenAI variations
+                    if (searchTerm.includes('openai') && (title.includes('chatgpt') || description.includes('openai'))) {
+                        isMatch = true;
+                    }
+                    // Google variations
+                    if ((searchTerm.includes('google') || searchTerm.includes('bard')) && 
+                        (title.includes('gemini') || description.includes('google'))) {
+                        isMatch = true;
+                    }
+                }
+                
+                if (isMatch) {
+                    card.style.display = 'block';
+                    card.style.opacity = '1';
+                    card.classList.remove('hidden');
+                    hasResults = true;
+                    
+                    // Highlight matching card
+                    card.style.transform = 'scale(1.02)';
+                    card.style.boxShadow = '0 25px 50px rgba(102, 126, 234, 0.3)';
+                    setTimeout(() => {
+                        card.style.transform = '';
+                        card.style.boxShadow = '';
+                    }, 300);
+                } else {
+                    card.style.display = 'none';
+                    card.style.opacity = '0';
+                    card.classList.add('hidden');
+                }
+            });
+            
+            if (!hasResults) {
+                showNoResults(searchTerm);
+            } else {
+                hideNoResults();
+            }
+        }
+
+        function showNoResults(searchTerm) {
+            let noResultsDiv = document.getElementById('noResults');
+            if (!noResultsDiv) {
+                noResultsDiv = document.createElement('div');
+                noResultsDiv.id = 'noResults';
+                noResultsDiv.className = 'no-results';
+                noResultsDiv.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <h3>🔍 No results found for "${searchTerm}"</h3>
+                        <p>Try searching for: <strong>Gemini</strong>, <strong>Claude</strong>, <strong>ChatGPT</strong>, <strong>Cursor</strong>, <strong>Flux</strong>, <strong>Perplexity</strong></p>
+                        <p>Or search by category: <strong>coding</strong>, <strong>writing</strong>, <strong>images</strong>, <strong>voice</strong>, <strong>research</strong></p>
+                    </div>
+                `;
+                document.getElementById('aiGrid').appendChild(noResultsDiv);
+            } else {
+                noResultsDiv.querySelector('h3').textContent = `🔍 No results found for "${searchTerm}"`;
+                noResultsDiv.style.display = 'block';
+            }
+        }
+
+        function hideNoResults() {
+            const noResultsDiv = document.getElementById('noResults');
+            if (noResultsDiv) {
+                noResultsDiv.style.display = 'none';
+            }
+        }
+
+        // Filter functionality
+        function filterAI(category) {
+            const cards = document.querySelectorAll('.ai-card');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            // Update active filter button
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter cards
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                    card.classList.remove('hidden');
+                } else {
+                    card.style.display = 'none';
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        // Launch AI tool
+        function launchAI(url) {
+            window.open(url, '_blank');
+        }
+
+        // Real-time search
+        document.getElementById('searchInput').addEventListener('input', performSearch);
+
+        // Enter key search
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Animation on scroll
+        function animateOnScroll() {
+            const cards = document.querySelectorAll('.ai-card');
+            cards.forEach((card, index) => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    card.style.animation = `fadeInUp 0.6s ease forwards ${index * 0.1}s`;
+                }
+            });
+        }
+
+        // CSS for fade in animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
+    </script>
+</body>
+</html>
